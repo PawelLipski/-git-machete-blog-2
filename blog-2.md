@@ -1,8 +1,8 @@
 
 # `git machete` strikes again! Custom annotations, branch dependency inference and more
 
-## Intro
 
+## Intro
 
 Link to machete as such + install instructions again
 
@@ -18,6 +18,7 @@ master
 ```
 
 Address the problems that readers of the previous part suggested via Reddit, and solve some other issues that I came across in the day-to-day use.
+
 
 ## Which PR was that... custom annotations and improved remote sync-ness status
 
@@ -35,9 +36,16 @@ You could also see that the output slighly changed.
 
 What was especially inconvenient with earlier versions of machete was that you couldn't really distinguish between a untracked branch and a one that is tracked but is not in sync with its upstream.
 
-Once it even made me forget about one of my branches
+Once it even made me forget about one of my branches ###
 
-untracked, ahead of remote, behind remote etc.
+`git machete status` now distinguishes between the following:
+* `untracked`
+* `ahead of remote`
+* `behind remote`
+* `diverged from origin`
+
+Now also more consistent with `git status` in that it uses the remote tracking branch set with `git branch --set-upstream` or `git push -u`.
+
 
 ## Don't remember what depended on what... branch dependency inference
 
@@ -62,7 +70,8 @@ Let's now run `git machete infer` to see what is being suggested:
 
 Now you can either accept the inferred tree with `y[es]`, `e[dit]` the tree or reject the suggested version with `n[o]`.
 
-In case of `yes`/`edit`, the old definition file (if ) will be saved to 
+In case of `yes`/`edit`, the old definition file will be saved under `.git/machete~` (note the added tilde).
+
 
 ## Too lazy to think what to update next... dependency tree traversal
 
@@ -75,7 +84,14 @@ The sequence of steps suggested in the first blog post (TODO link to section!), 
 
 is actually quite repetitive in a daily work with `git machete`, esp. when you receive a lot of remarks on review and push fixes in rounds.
 
-To free myself from thinking about what to check out next, I implemented a kind of wizard to sort as much as possible for me - it's called `traverse`.
+To free yourself from thinking about what to check out next, you can check a kind of wizard that walks (or rather, traverses) the branch dependency tree and
+suggests what needs to be done next to restore sync of branches with their parent branches and remotes - it's called `traverse`.
+
+The traversal is performed by moving to `next` of each branch ###
+More specifically, this is equivalent to a pre-order depth-first search of the tree - each node (i.e. each git branch) visited (and possibly synced) before any of its children are visited.
+This ### makes sense since #####
+
+Let's
 
 TODO: screenshot of interaction for the set up env
 
