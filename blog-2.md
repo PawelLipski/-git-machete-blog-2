@@ -69,33 +69,48 @@ As of v2.0.0, `git machete status` now distinguishes between the following cases
 pretty much just like `git status` does.
 
 Now it's also more consistent with `git status` in that it uses the remote tracking branch information (as set up via `git branch --set-upstream` or `git push -u`) to determine the remote counterpart branch,
-rather than simply matching by name.
+rather than simply matching branches by name.
 
 
 ## Don't remember what depended on what... branch dependency inference
 
-If you plan to add some existing local branch, but you don't remember what it actually depended on in the first place...
+If you plan to add some existing local branch to the dependency tree, but you don't remember what it actually depended on in the first place...
 
-`add` subcommand infers the upstream branch
+TODO add a branch that's not listed
+In the demo we have a branch ??? that is not yet listed in the definition file.
 
-That's too complicated to outline in details, but in general it is based on a similar trick as the algorithm for determining the fork point:
+Now let's just do `git machete add ????`
 
-To infer the upstream branch for a branch X
-reflogs of all other local branches Y are compared to the logs of (roughly) the reflog-wise earliest commits ever done on X.
+TODO insert screenshot
 
-Then, if ...
+In case the desired upstream branch isn't specified with `--onto` option, `add` subcommand tries infers this upstream by some log/reflog magic similar to the one used for `fork-point`
+(as described in the first part of the series).
 
-Some extra measures are taken to make sure that no cycles occur (so that we actually end up with a tree of branches and not some arbitrary graph).
+TODO remove {
+	That's too complicated to outline in details, but in general it is based on a similar trick as the algorithm for determining the fork point:
 
-We set up the repository according to the script: ####
+	To infer the upstream branch for a branch X
+	reflogs of all other local branches Y are compared to the logs of (roughly) the reflog-wise earliest commits ever done on X.
 
-Let's now run `git machete infer` to see what is being suggested:
+	Then, if ...
 
-// Insert the pic
+	Some extra measures are taken to make sure that no cycles occur (so that we actually end up with a tree of branches and not some arbitrary graph).
+}
 
-Now you can either accept the inferred tree with `y[es]`, `e[dit]` the tree or reject the suggested version with `n[o]`.
+What's more, this inference is not limited to just a single branch - it can even be performed on repository where there is not `.git/machete` file yet to infer the entire dependency tree in a single pass!
 
-In case of `yes`/`edit`, the old definition file will be saved under `.git/machete~` (note the added tilde).
+Let's now remove the `.git/machete` file (so that we make sure `git machete` doesn't have any hint on the inferred result) and run `git machete infer`:
+
+TODO screenshot
+
+In this case `infer` guessed the entire tree properly basically by just looking at branch reflogs (and also doing some tricks to prevent cycles from happening in the inferred graph).
+
+`infer` gives the choice to either accept the inferred tree with `y[es]`, `e[dit]` the tree or reject the suggested version with `n[o]`.
+
+In case of `yes`/`edit`, the old definition file (if it already exists) will be saved under `.git/machete~` (note the added tilde).
+
+At this point one can ask a question: why then do we even need the definition file since we can always infer the upstreams on the fly when doing `status`, `update` etc.?
+The reason against that is that ???we don't want everything to happen ?????, we need to leave a sensible amount of control in the hands of the developer while still helping ???
 
 
 ## Too lazy to think what to update next... dependency tree traversal
@@ -112,7 +127,7 @@ is actually quite repetitive in a daily work with `git machete`, esp. when you r
 To free yourself from thinking about what to check out next, you can check a kind of wizard that walks (or rather, traverses) the branch dependency tree and
 suggests what needs to be done next to restore sync of branches with their parent branches and remotes - it's called `traverse`.
 
-The traversal is performed by moving to `next` of each branch ###
+The traversal is performed by moving to `next` of each branch (just like doine of `git machete go next`).
 More specifically, this is equivalent to a pre-order depth-first search of the tree - each node (i.e. each git branch) visited (and possibly synced) before any of its children are visited.
 This ### makes sense since you definitely want to put each branch `X` in sync with its parent branch first before syncing `X`'s children to `X` itself.
 
