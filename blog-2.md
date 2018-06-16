@@ -4,9 +4,34 @@
 
 ## Intro
 
-Link to machete as such + install instructions again
+Good news - git machete 2.0 has been released!
+For those of you not familiar with this nifty tool, I recommend quick look at the [previous part of this series (link)](https://virtuslab.com/blog/make-way-git-rebase-jungle-git-machete) -
+or at least a look at the screenshots to get a TL;DR-y kind of understanding what machete actually does.
 
-Link to machete-sandbox-2.sh - another one, simpler!
+To get the latest git machete release, you can get it directly from [the git machete repo (github.com/PawelLipski/git-machete)](https://github.com/PawelLipski/git-machete):
+
+```bash
+$ git clone https://github.com/PawelLipski/git-machete.git
+$ cd git-machete
+$ sudo make install
+```
+
+`make install` copies the `git-machete` Python 2.7 executable to `/usr/local/bin` and sets up a corresponding Bash completion script in `/etc/bash_completion.d`.
+
+The previous post met with quite ???sizable interest, especially in comments on a Reddit ???share.
+It was exactly there where some of the improvements (especially automatic dependency inference) have been suggested - many thanks for the feedback, esp. for the Reddit user ????(TODO).
+Other recent tweaks to git machete were introduced simply to make the day-to-day use of the tool even more convenient.
+Also, special thanks for @### (github.com/) who raised an issue (TODO link) regarding the crashes of git machete when run from a git submodule.
+
+As in the first part of the series, there is a script that sets up a demo repository with a couple of branches -
+[you can download it directly from GitHub (link)](https://raw.githubusercontent.com/PawelLipski/git-machete-blog/master/sandbox-setup.sh).
+
+One tricky thing with this script is that it actually sets two repos - one at `~/machete-sandbox` and another one at ~/machete-sandbox-remote`.
+The latter is just a _bare_ repository (i.e. created with `git init --bare`) - that is, a one that doesn't have working tree, just `.git` folder.
+This will serve as a local dummy remote repo for the one under `~/machete-sandbox`.
+The script runs `git remote add origin ~/machete-sandbox-remote` so as to establish an actual local/remote relation between the repos, with all the push/pull capabilities that are available over https or ssh.
+
+Structure of branches in the demo (the contents of the definition file, modulo annotations that we'll cover soon) is as follows:
 
 ```
 develop
@@ -17,34 +42,34 @@ master
     hotfix/add-trigger
 ```
 
-Address the problems that readers of the previous part suggested via Reddit, and solve some other issues that I came across in the day-to-day use.
-
 
 ## Which PR was that... custom annotations and improved remote sync-ness status
 
-A common problem is that you have some PRs
+A common problem is that for most locally developed branches (possibly other than dependency tree roots, like `develop` or `master`), at some point you'll have a pull request on e.g. GitHub or Bitbucket.
+It can get pretty inconvenient to "optically" match branch names to PRs... especially in case of bitbucket which by default doesn't display source branch names in the PR list, only the destination branch.
+To make it easier, `git machete status` received a simple tweak recently: custom annotations.
+Simply put any phrase after the branch name, separated with a single space (there's an implicit assumption here that you never put spaces in git branch names... if you do, think it over twice!),
+and it will be displayed in output of `status` subcommand.
+To be precise, anything can be placed as annotation, not only PR number specifially... but PR number seems the most natural use case.
 
-Simply put any phrase after the branch name, separated with a single space (there's an implicit assumption here that you never put spaces in git branch names... if you do, think it over twice :D).
-
-Now when printing the `status`:
+The annotations were already set up by the `sandbox-setup` script.
+Let's print the `status`:
 
 // Img here
 
-// TODO setup a local remote for the a repo
+The PR numbers are here completely random here, since the script obviously didn't set up any actual PRs anywhere.
 
-You could also see that the output slighly changed.
-
-What was especially inconvenient with earlier versions of machete was that you couldn't really distinguish between a untracked branch and a one that is tracked but is not in sync with its upstream.
-
-Once it even made me forget about one of my branches ###
-
-`git machete status` now distinguishes between the following:
+You could also notice that the output slighly changed in terms of remote-syncness message.
+What was especially inconvenient in the earlier versions of Machete was that you couldn't really distinguish between an untracked branch and a one that is tracked but is not in sync with its upstream.
+As of v2.0.0, `git machete status` now distinguishes between the following cases:
 * `untracked`
-* `ahead of remote`
-* `behind remote`
-* `diverged from origin`
+* `ahead of origin`
+* `behind origin`
+* `diverged from origin`,
+pretty much just like `git status` does.
 
-Now also more consistent with `git status` in that it uses the remote tracking branch set with `git branch --set-upstream` or `git push -u`.
+Now it's also more consistent with `git status` in that it uses the remote tracking branch information (as set up via `git branch --set-upstream` or `git push -u`) to determine the remote counterpart branch,
+rather than simply matching by name.
 
 
 ## Don't remember what depended on what... branch dependency inference
@@ -89,9 +114,16 @@ suggests what needs to be done next to restore sync of branches with their paren
 
 The traversal is performed by moving to `next` of each branch ###
 More specifically, this is equivalent to a pre-order depth-first search of the tree - each node (i.e. each git branch) visited (and possibly synced) before any of its children are visited.
-This ### makes sense since #####
+This ### makes sense since you definitely want to put each branch `X` in sync with its parent branch first before syncing `X`'s children to `X` itself.
 
-Let's
+Let's check out the `develop` branch (which is a root of the dependency tree) and then iterate through the branches.
+
+TODO screenshot
+
+We see that 
+
+for ??? we weren't asked to rebase onto ??? since the branches were already aligned.
+Similiarly, `traverse` didn't suggest to push ??? since it was already in sync with origin/???
 
 TODO: screenshot of interaction for the set up env
 
