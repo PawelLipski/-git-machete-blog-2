@@ -23,7 +23,6 @@ newrepo() {
 }
 
 newrepo machete-sandbox-remote --bare
-
 newrepo machete-sandbox
 git remote add origin ~/machete-sandbox-remote
 
@@ -31,18 +30,23 @@ newb root
 	cmt Root
 newb develop
 	cmt Develop commit
-	git push -u
 newb allow-ownership-link
 	git push -u
 	cmt Allow ownership links
 newb build-chain
 	cmt Build arbitrarily long chains
+git checkout allow-ownership-link
+	cmt 1st round of fixes
 git checkout develop
+	cmt Other develop commit
+	git push -u
 newb call-ws
 	cmt Call web service
 	cmt 1st round of fixes
 	git push -u
 	git reset --hard HEAD~
+newb drop-constraint # not added to definition file
+	cmt Drop unneeded SQL constraints
 
 git checkout root
 newb master
@@ -55,8 +59,8 @@ newb hotfix/add-trigger
 
 cat >.git/machete <<EOF
 develop
-    allow-ownership-link
-        build-chain
+    allow-ownership-link PR #123
+        build-chain PR #124
     call-ws
 master
     hotfix/add-trigger

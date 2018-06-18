@@ -24,14 +24,14 @@ Other recent tweaks to git machete were introduced simply to make the day-to-day
 Also, special thanks for @### (github.com/) who raised an issue (TODO link) regarding the crashes of git machete when run from a git submodule.
 
 As in the first part of the series, there is a script that sets up a demo repository with a couple of branches -
-[you can download it directly from GitHub (link)](https://raw.githubusercontent.com/PawelLipski/git-machete-blog/master/sandbox-setup.sh).
+you can download it [directly from GitHub (link)](https://raw.githubusercontent.com/PawelLipski/git-machete-blog-2/master/sandbox-setup-2.sh).
 
 One tricky thing with this script is that it actually sets two repos - one at `~/machete-sandbox` and another one at ~/machete-sandbox-remote`.
 The latter is just a _bare_ repository (i.e. created with `git init --bare`) - that is, a one that doesn't have working tree, just `.git` folder.
 This will serve as a local dummy remote repo for the one under `~/machete-sandbox`.
 The script runs `git remote add origin ~/machete-sandbox-remote` so as to establish an actual local/remote relation between the repos, with all the push/pull capabilities that are available over https or ssh.
 
-Structure of branches in the demo (the contents of the definition file, modulo annotations that we'll cover soon) is as follows:
+Structure of branches in the demo (the contents of the definition file, without custom annotations that we'll cover soon) is as follows:
 
 ```
 develop
@@ -53,20 +53,20 @@ and it will be displayed in output of `status` subcommand.
 To be precise, anything can be placed as annotation, not only PR number specifially... but PR number seems the most natural use case.
 
 The annotations were already set up by the `sandbox-setup` script.
-Let's print the `status`:
+Let's run the `git machete status`:
 
-// Img here
+![status](status.png)
 
 The PR numbers are here completely random here, since the script obviously didn't set up any actual PRs anywhere.
 
 You could also notice that the output slighly changed in terms of remote-syncness message.
 What was especially inconvenient in the earlier versions of Machete was that you couldn't really distinguish between an untracked branch and a one that is tracked but is not in sync with its upstream.
-As of v2.0.0, `git machete status` now distinguishes between the following cases:
+As of v2.0 of git machete, `status` distinguishes between the following cases:
 * `untracked`
 * `ahead of origin`
 * `behind origin`
 * `diverged from origin`,
-pretty much just like `git status` does.
+pretty much just like plain old `git status` does.
 
 Now it's also more consistent with `git status` in that it uses the remote tracking branch information (as set up via `git branch --set-upstream` or `git push -u`) to determine the remote counterpart branch,
 rather than simply matching branches by name.
@@ -76,15 +76,14 @@ rather than simply matching branches by name.
 
 If you plan to add some existing local branch to the dependency tree, but you don't remember what it actually depended on in the first place...
 
-TODO add a branch that's not listed
-In the demo we have a branch ??? that is not yet listed in the definition file.
+In the demo we have a branch `drop-constraint` that is not yet managed by git machete (i.e. not listed in the definition file).
 
-Now let's just do `git machete add ????`
+Now let's try and do `git machete add drop-constraint`:
 
 TODO insert screenshot
 
-In case the desired upstream branch isn't specified with `--onto` option, `add` subcommand tries infers this upstream by some log/reflog magic similar to the one used for `fork-point`
-(as described in the first part of the series).
+Since the desired upstream branch wasn't specified (no `--onto` option was provided), `add` subcommand inferred the `drop-constraint`'s upstream with a little use of log/reflog magic...
+actually, somewhat similar to the one used for `fork-point` (as described in the first part of the series).
 
 TODO remove {
 	That's too complicated to outline in details, but in general it is based on a similar trick as the algorithm for determining the fork point:
@@ -97,9 +96,9 @@ TODO remove {
 	Some extra measures are taken to make sure that no cycles occur (so that we actually end up with a tree of branches and not some arbitrary graph).
 }
 
-What's more, this inference is not limited to just a single branch - it can even be performed on repository where there is not `.git/machete` file yet to infer the entire dependency tree in a single pass!
+What's more, this inference is not just limited to adding a single branch - it can even be performed on a repository where there is no `.git/machete` file yet to infer the entire dependency tree with a single command!
 
-Let's now remove the `.git/machete` file (so that we make sure `git machete` doesn't have any hint on the inferred result) and run `git machete infer`:
+For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure we don't provide `git machete` with any hint) and run `git machete infer`:
 
 TODO screenshot
 
@@ -113,7 +112,7 @@ At this point one can ask a question: why then do we even need the definition fi
 The reason against that is that ???we don't want everything to happen ?????, we need to leave a sensible amount of control in the hands of the developer while still helping ???
 
 
-## Too lazy to think what to update next... dependency tree traversal
+## Too lazy to think what to rebase next... dependency tree traversal
 
 The sequence of steps suggested in the first blog post (TODO link to section!), namely:
 
@@ -141,5 +140,4 @@ for ??? we weren't asked to rebase onto ??? since the branches were already alig
 Similiarly, `traverse` didn't suggest to push ??? since it was already in sync with origin/???
 
 TODO: screenshot of interaction for the set up env
-
 
