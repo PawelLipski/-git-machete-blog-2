@@ -114,6 +114,8 @@ The reason against that is that ???we don't want everything to happen ?????, we 
 
 ## Too lazy to think what to rebase next... dependency tree traversal
 
+TODO: maybe move as first section!
+
 The sequence of steps suggested in the first blog post (TODO link to section!), namely:
 
 * check out a branch X
@@ -126,18 +128,19 @@ is actually quite repetitive in a daily work with `git machete`, esp. when you r
 To free yourself from thinking about what to check out next, you can check a kind of wizard that walks (or rather, traverses) the branch dependency tree and
 suggests what needs to be done next to restore sync of branches with their parent branches and remotes - it's called `traverse`.
 
-The traversal is performed by moving to `next` of each branch (just like doine of `git machete go next`).
-More specifically, this is equivalent to a pre-order depth-first search of the tree - each node (i.e. each git branch) visited (and possibly synced) before any of its children are visited.
-This ### makes sense since you definitely want to put each branch `X` in sync with its parent branch first before syncing `X`'s children to `X` itself.
-
 Let's check out the `develop` branch (which is a root of the dependency tree) and then iterate through the branches.
 
-TODO screenshot
+![traverse](traverse.png)
 
-We see that 
+What happened here is that we started from `develop` and instantly moved to `allow-ownership-link`.
+`allow-ownership-link` wasn't originally in sync with `develop`
+
+The traversal is performed by moving to `next` of each branch (just like doine of `git machete go next`).
+More specifically, this is equivalent to a pre-order depth-first search of the tree - each node (i.e. each git branch) visited (and possibly synced) before any of its children are visited.
+A manner like this makes sense since you definitely want to put each branch `X` in sync with its parent branch first before syncing `X`'s children to `X` itself.
+
+For the sake of brevity it isn't included in this blog post, but if we were to continue the traversal, then we'll first encounter
 
 for ??? we weren't asked to rebase onto ??? since the branches were already aligned.
 Similiarly, `traverse` didn't suggest to push ??? since it was already in sync with origin/???
-
-TODO: screenshot of interaction for the set up env
 
