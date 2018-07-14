@@ -5,8 +5,8 @@
 ## Intro
 
 Good news - git machete 2.0 has been released!
-For those of you not familiar with this nifty tool, I recommend having a quick look at the [previous part of this series (link)](https://virtuslab.com/blog/make-way-git-rebase-jungle-git-machete) -
-or at least scrolling through the screenshots there to get a TL;DR kind of understanding what machete actually does.
+For those of you not familiar with this nifty tool, I recommend having a quick look at the [previous part of this series (link)](https://virtuslab.com/blog/make-way-git-rebase-jungle-git-machete)...
+or at least scrolling through the screenshots in that blog post to get a TL;DR kind of understanding what git machete actually does.
 
 You can get the latest git machete release directly from [the git machete repo (github.com/PawelLipski/git-machete)](https://github.com/PawelLipski/git-machete):
 
@@ -16,13 +16,14 @@ $ cd git-machete
 $ sudo make install
 ```
 
-`make install` copies the `git-machete` Python 2.7 executable to `/usr/local/bin` and sets up a corresponding Bash completion script in `/etc/bash_completion.d`.
-
-TODO!!!!!!!!!!!! also about that is better to split work into smaller PRs b/c they're easier to review and stuff - another rationale for git machete in general
+`make install` copies the `git-machete` Python 2.7 executable to `/usr/local/bin` and sets up the corresponding Bash completion script in `/etc/bash_completion.d`.
 
 Some of the latest improvements (especially automatic dependency inference) have been suggested on Reddit discussion - many thanks for the feedback.
 Also, special thanks for the GitHub user [sprudent](https://github.com/sprudent) who raised an issue regarding the crashes of git machete when run from a git submodule.
 Other recent tweaks to git machete were introduced simply to make the day-to-day use of the tool even more convenient.
+
+TODO!!!!!!!!!!!!  In terms of rationale/big picture for using git machete, this also has been widely discussed on Reddit thread
+also about that is better to split work into smaller PRs b/c they're easier to review and stuff - another rationale for git machete in general
 
 As in the first part of the series, there is a dedicated script that sets up a demo repository with a couple of branches -
 you can download it [directly from GitHub (link)](https://raw.githubusercontent.com/PawelLipski/git-machete-blog-2/master/sandbox-setup-2.sh).
