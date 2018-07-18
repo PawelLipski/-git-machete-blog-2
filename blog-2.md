@@ -1,5 +1,14 @@
 
-# `git machete` strikes again! Custom annotations, branch dependency inference and more
+
+TODO: remove hostname from screens!!!!!!!!!!!
+TODO: remove hostname from screens!!!!!!!!!!!
+TODO: remove hostname from screens!!!!!!!!!!!
+TODO: remove hostname from screens!!!!!!!!!!!
+TODO: remove hostname from screens!!!!!!!!!!!
+TODO: remove hostname from screens!!!!!!!!!!!
+TODO: remove hostname from screens!!!!!!!!!!!
+
+# `git machete` strikes again! Traverse the git (rebase) jungle even faster with v2.0
 
 
 ## Intro
@@ -24,6 +33,9 @@ Other recent tweaks to git machete were introduced simply to make the day-to-day
 
 TODO!!!!!!!!!!!!  In terms of rationale/big picture for using git machete, this also has been widely discussed on Reddit thread
 also about that is better to split work into smaller PRs b/c they're easier to review and stuff - another rationale for git machete in general
+
+TODO describe
+![Too many files in a single PR...](files-changed.png)
 
 As in the first part of the series, there is a dedicated script that sets up a demo repository with a couple of branches -
 you can download it [directly from GitHub (link)](https://raw.githubusercontent.com/PawelLipski/git-machete-blog-2/master/sandbox-setup-2.sh).
@@ -60,7 +72,7 @@ To be precise, anything can be placed as annotation, not only PR number specifia
 The annotations were already set up by the `sandbox-setup-2` script.
 Let's run `git machete status`:
 
-![status](status.png)
+![git machete status](status.png)
 
 The PR numbers are here completely arbitrary here, since the script obviously didn't set up any actual PRs on any external service.
 
@@ -96,7 +108,7 @@ suggests what needs to be done next to restore sync of branches with their paren
 
 Let's check out the `develop` branch (which is a root of the dependency tree) and then iterate through the branches.
 
-![traverse](traverse.png)
+![git machete traverse](traverse.png)
 
 What happened here is that we started from `develop` and instantly moved to `allow-ownership-link`.
 `allow-ownership-link` wasn't originally in sync with `develop`
@@ -115,11 +127,11 @@ Similiarly, `traverse` didn't suggest to push ??? since it was already in sync w
 
 If you plan to add some existing local branch to the dependency tree, but you don't remember what it actually depended on in the first place...
 
-In the demo we have a branch `drop-constraint` that is not yet managed by git machete (i.e. not listed in the definition file).
+The demo script sets up a branch `drop-constraint` that is not yet managed by git machete (i.e. not listed in the definition file).
 
 Now let's try and do `git machete add drop-constraint`:
 
-TODO insert screenshot
+![git machete add](add.png)
 
 Since the desired upstream branch wasn't specified (no `--onto` option was provided), `add` subcommand inferred the `drop-constraint`'s upstream with a little use of log/reflog magic...
 actually, somewhat similar to the one used for `fork-point` (as described in the first part of the series).
@@ -139,15 +151,16 @@ What's more, this inference is not just limited to adding a single branch - it c
 
 For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure we don't provide `git machete` with any hint) and run `git machete infer`:
 
-TODO screenshot
-
-In this case `infer` guessed the entire tree properly basically by just looking at branch reflogs (and also doing some tricks to prevent cycles from happening in the inferred graph).
+![git machete infer](infer.png)
 
 `infer` gives the choice to either accept the inferred tree with `y[es]`, `e[dit]` the tree or reject the suggested version with `n[o]`.
-
 In case of `yes`/`edit`, the old definition file (if it already exists) will be saved under `.git/machete~` (note the added tilde).
 
-At this point one can ask a question: why then do we even need the definition file since we can always infer the upstreams on the fly when doing `status`, `update` etc.?
-The reason against that is that ???we don't want everything to happen ?????, we need to leave a sensible amount of control in the hands of the developer while still helping ???
+In the above scenario `infer` guessed the entire tree properly by careful analysis of branch reflog.
+A parent was basically inferred for every single local branch independently... and later some tricks (inspired by [disjoint-set data structure](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)) were done to prevent cycles in the inferred graph.
+The only thing that obviously could not be inferred were custom annotations.
 
+At this point one can ask a question: why then do we even need the definition file since we can always infer the upstreams on the fly when doing `status`, `update` etc.?
+The reason against that is that ???we don't want everything to happen automagically.
+We need to leave a sensible amount of control in the hands of the developer while still helping ???
 
