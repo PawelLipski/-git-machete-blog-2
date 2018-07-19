@@ -1,13 +1,4 @@
 
-
-TODO: remove hostname from screens!!!!!!!!!!!
-TODO: remove hostname from screens!!!!!!!!!!!
-TODO: remove hostname from screens!!!!!!!!!!!
-TODO: remove hostname from screens!!!!!!!!!!!
-TODO: remove hostname from screens!!!!!!!!!!!
-TODO: remove hostname from screens!!!!!!!!!!!
-TODO: remove hostname from screens!!!!!!!!!!!
-
 # `git machete` strikes again! Traverse the git (rebase) jungle even faster with v2.0
 
 
@@ -33,7 +24,6 @@ Other recent tweaks to git machete were introduced simply to make the day-to-day
 
 TODO!!!!!!!!!!!!  In terms of rationale/big picture for using git machete, this also has been widely discussed on Reddit thread
 also about that is better to split work into smaller PRs b/c they're easier to review and stuff - another rationale for git machete in general
-
 TODO describe
 ![Too many files in a single PR...](files-changed.png)
 
@@ -111,16 +101,16 @@ Let's check out the `develop` branch (which is a root of the dependency tree) an
 ![git machete traverse](traverse.png)
 
 What happened here is that we started from `develop` and instantly moved to `allow-ownership-link`.
-`allow-ownership-link` wasn't originally in sync with `develop`
+`allow-ownership-link` wasn't originally in sync with `develop` so `traverse` asked whether to rebase `allow-ownership-link` onto `develop`.
+Along the same lines, we ??? TODO
 
-The traversal is performed by moving to `next` of each branch (just like doine of `git machete go next`).
-More specifically, this is equivalent to a pre-order depth-first search of the tree - each node (i.e. each git branch) visited (and possibly synced) before any of its children are visited.
-A manner like this makes sense since you definitely want to put each branch `X` in sync with its parent branch first before syncing `X`'s children to `X` itself.
+For the sake of brevity it isn't included in this blog post, but if we were to continue the traversal, then we'll first encounter the branch ??? which was aligned with `develop`, so rebase hasn't even been proposed.
+Similiarly, `traverse` wouldn't later suggest to push or pull `master` since it was already in sync with its remote counterpart.
 
-For the sake of brevity it isn't included in this blog post, but if we were to continue the traversal, then we'll first encounter
-
-for ??? we weren't asked to rebase onto ??? since the branches were already aligned.
-Similiarly, `traverse` didn't suggest to push ??? since it was already in sync with origin/???
+Generally, the traversal is performed by moving to `next` of each branch (so, pretty much by running `git machete go next`).
+For the more graph-theory-savvy of you... this is equivalent to a pre-order depth-first search of the tree.
+Each node of the tree (i.e. each git branch) is visited and possibly synced before any of its children are visited.
+This way of traversal makes more sense than post-order or breadth-first search since you definitely want to put each branch `X` in sync with its parent branch first before syncing `X`'s children to `X` itself.
 
 
 ## Don't remember what depended on what... branch dependency inference
