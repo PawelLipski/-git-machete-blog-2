@@ -11,7 +11,7 @@ TODO!!!!!!!!!!!!  In general, git machete helps manage TODO
 also about that is better to split work into smaller PRs b/c they're easier
 so that you can avoid situations like that...
 ![Too many files in a single PR...](files-changed.png)
-The downside of having multiple smaller PRs is that they are pretty difficult to manage... but `git machete` helps solve ???????
+The downside of having multiple smaller PRs is that they are pretty difficult to manage... but `git machete` helps TODO
 
 You can get the latest git machete release directly from [the git machete repo (github.com/PawelLipski/git-machete)](https://github.com/PawelLipski/git-machete):
 
@@ -91,7 +91,7 @@ The sequence of steps suggested in the first blog post, namely:
 * push with force to remote if needed
 * check out another branch - a child of X
 
-is actually TODO quite repetitive in a daily work with `git machete`, esp. when you receive a lot of remarks on review and push fixes in rounds.
+actually repeats pretty often in a daily work with `git machete`, esp. when you receive a lot of remarks on review and push fixes in rounds.
 
 To free yourself from thinking about what to check out next, you can check a kind of wizard that walks (or rather, traverses) the branch dependency tree and
 suggests what needs to be done next to restore sync of branches with their parent branches and remotes - it's called `traverse`.
@@ -115,7 +115,7 @@ This way of traversal makes more sense than post-order or breadth-first search s
 
 ## Don't remember what depended on what... branch dependency inference
 
-new shiny feature
+Another new shiny feature that has been recently added to git machete is TODO.
 There's a couple of contexts where ???
 
 ### `show up`, `go up`
@@ -154,20 +154,8 @@ In the above scenario `infer` guessed the entire tree properly by careful analys
 A parent was basically inferred for every single local branch independently... and later some tricks (inspired by [disjoint-set data structure](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)) were done to prevent cycles in the inferred graph.
 The only thing that obviously could not be inferred were custom annotations.
 
+TODO: maybe not needed anymore?
 At this point one can ask a question: why then do we even need the definition file since we can always infer the upstreams on the fly when doing `status`, `update` etc.?
 The reason against that is that ???we don't want everything to happen automagically.
 We need to leave a sensible amount of control in the hands of the developer while still helping ???
-
-### Appendix - how inference works
-
-TODO remove {
-	That's too complicated to outline in details, but in general it is based on a similar trick as the algorithm for determining the fork point:
-
-	To infer the upstream branch for a branch X
-	reflogs of all other local branches Y are compared to the logs of (roughly) the reflog-wise earliest commits ever done on X.
-
-	Then, if ...
-
-	Some extra measures are taken to make sure that no cycles occur (so that we actually end up with a tree of branches and not some arbitrary graph).
-}
 
