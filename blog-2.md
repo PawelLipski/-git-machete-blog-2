@@ -10,13 +10,13 @@ For those of you not familiar with this nifty tool, I recommend having a quick l
 or at least scrolling through the screenshots in that blog post to get a TL;DR kind of understanding what git machete actually does.
 
 In general, git machete is a tool that helps manage multiple branches within git repository and thus promotes creation of smaller pull requests that are (usually) easier to review.
-Just recall the last time when you had to review a giant like this:
+Just recall the last time when you had to review a giant like this (diff stats shown of course only for a few first files):
 
 ![Too many files in a single PR...](files-changed.png)
 
 You can get the latest git machete release directly from [the git machete repo (github.com/PawelLipski/git-machete)](https://github.com/PawelLipski/git-machete):
 
-```bash
+```
 $ git clone https://github.com/PawelLipski/git-machete.git
 $ cd git-machete
 $ sudo make install
@@ -34,10 +34,10 @@ As in the first part of the series, there is a dedicated script that sets up a d
 you can download it [directly from GitHub (link)](https://raw.githubusercontent.com/PawelLipski/git-machete-blog-2/master/sandbox-setup-2.sh).
 
 A tricky thing about the script is that it actually sets up two repos - one at `~/machete-sandbox` and another one at `~/machete-sandbox-remote`.
-The latter is a _bare_ repository - that is, a one that is created with `git init --bare` and that doesn't have working tree, just `.git` folder.
+The latter is a _bare_ repository - that is, a one that is created with `git init --bare` and hence doesn't have working tree, just `.git` folder.
 This will serve as a dummy remote for the repo under `~/machete-sandbox`.
 More specifically, the script runs `git remote add origin ~/machete-sandbox-remote` from `~/machete-sandbox` directory
-so as to establish an actual local/remote relation between the repos, with the same push/pull capabilities that are available over HTTPS or SSH.
+so as to establish an actual local/remote relation between the repos, with similar push/pull capabilities that are available over HTTPS or SSH.
 
 The initial structure of branches in the demo (i.e., the contents of the `.git/machete` definition file, excluding custom annotations that will be covered soon) is as follows:
 
