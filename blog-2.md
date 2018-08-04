@@ -115,33 +115,47 @@ This way of traversal makes more sense than post-order or breadth-first search s
 
 ## Don't remember what depended on what... branch dependency inference
 
-Another new shiny feature that has been recently added to git machete is TODO.
-There's a couple of contexts where ???
+Another new shiny feature that has been recently added to git machete is the ability to automatically infer what the upstream of a given branch is.
+There's a couple of contexts where you can take advantage of this feature.
 
 ### `show up`, `go up`
 
-TODO screenshot maybe
+The `sandbox-setup-2.sh` script added, among others, a branch `drop-constraint` that is not managed by git machete (i.e. not listed in the definition file).
+Let's assume for a moment that we're in an awkward situation of not remembering what branch it originally depended on and it's hard to simply guess it from `git log`.
 
-### `add`
+`git machete` for the rescue! Since v2.0 the tool has the ability to infer the upstream for a given branch `X`.
+I won't get into detail on the exact heuristics, but in general the algorithm takes into account reflogs of all local branches, specifically the reflog of `X` itself.
+Intuitively, the older parts of `X` reflog are more relevant since they're closer to the moment when `X` has been created.
+Note that's pretty similar approach to how the fork point (useful for many commands like `reapply`, `slide-out` and `update` and covered in more detail in the first part of the blog) is inferred.
 
-If you plan to add some existing local branch to the dependency tree, but you don't remember what it actually depended on in the first place...
+Back to `drop-constraint`... the easiest way to take advantage of upstream inference is to check out the branch in question and run `git machete show up`:
 
-The demo script sets up a branch `drop-constraint` that is not yet managed by git machete (i.e. not listed in the definition file).
+![git machete show up, git machete go up](show-up-go-up.png)
 
-Now let's try and do `git machete add drop-constraint`:
+The stderr output warns that `drop-constraint` isn't managed by `git machete` (i.e. not present in `.git/machete`) and suggests an inferred fallback (that's also printed to stdout to facilitate e.g. use in scripts).
+If you take a look at the `sandbox-setup-2.sh`, `drop-constraint` was indeed based off `call-ws`.
+Similarly, we used `go up` subcommand to check out the inferred upstream.
 
-![git machete add](add.png)
-
-Since the desired upstream branch wasn't specified (no `--onto` option was provided), `add` subcommand inferred the `drop-constraint`'s upstream with a little use of log/reflog magic...
-actually, somewhat similar to the one used for `fork-point` (as described in the first part of the series).
+Note that if `drop-constraint` was tracked in `.git/machete` then whole inference wouldn't happen since git machete would instead simply go for the upstream provided by the user.
+Also, the inference doesn't happen for any other `show`/`go` direction (like `down` or `next`) since this behavior could be pretty confusing and generally of little practical use.
 
 ### `update`
 
-TODO without actually setting up the `.git/machete` file
+Let's check out `drop-constraint` back again and, without changing anything in `.git/machete`, fire `git machete update`:
+
+![git machete update](update.png)
+
+### `add`
+
+Now let's try and do `git machete add`:
+
+![git machete add](add.png)
+
+Since the desired upstream branch wasn't specified (no `--onto` option was provided), `add` subcommand inferred the `drop-constraint`'s upstream.
 
 ### `infer`
 
-What's more, this inference is not just limited to adding a single branch - it can even be performed on a repository where there is no `.git/machete` file yet to infer the entire dependency tree with a single command!
+What's more, this inference is not just limited a single branch - it can even be performed on a repository where there is no `.git/machete` file yet to infer the entire dependency tree with a single command!
 
 For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure we don't provide `git machete` with any hint) and run `git machete infer`:
 
@@ -150,12 +164,13 @@ For demonstration purposes, let's now remove the `.git/machete` file (so as to m
 `infer` gives the choice to either accept the inferred tree with `y[es]`, `e[dit]` the tree or reject the suggested version with `n[o]`.
 In case of `yes`/`edit`, the old definition file (if it already exists) will be saved under `.git/machete~` (note the added tilde).
 
-In the above scenario `infer` guessed the entire tree properly by careful analysis of branch reflog.
-A parent was basically inferred for every single local branch independently... and later some tricks (inspired by [disjoint-set data structure](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)) were done to prevent cycles in the inferred graph.
+`infer` simply performed inference (just as for `show up` etc.) for every single local branch independently,
+while doing some tricks (inspired by [disjoint-set data structure](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)) to make sure no cycles appear in the inferred graph.
 The only thing that obviously could not be inferred were custom annotations.
+Also, if we changed the tree structure in the meantime (so that e.g. `develop` is a child of `call-ws`) we can't expect `infer` to guess exactly the changed structure.
+The inference is based on git reflogs and doesn't know anything about current or previous state of `.git/machete` file.
 
-TODO: maybe not needed anymore?
-At this point one can ask a question: why then do we even need the definition file since we can always infer the upstreams on the fly when doing `status`, `update` etc.?
-The reason against that is that ???we don't want everything to happen automagically.
-We need to leave a sensible amount of control in the hands of the developer while still helping ???
+At this point one can ask a question: why then do we even need the definition file since we can always infer the upstreams on the fly?
+The reason against that is that we don't want everything to happen automagically.
+We need to leave a sensible amount of control in the hands of the developer while providing them with some hints when they're in doubt - rather then reverse, inferring everything what's possible and only asking the human when the tool is in doubt.
 

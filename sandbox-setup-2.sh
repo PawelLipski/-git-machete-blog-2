@@ -44,9 +44,10 @@ newb call-ws
 	cmt Call web service
 	cmt 1st round of fixes
 	git push -u
-	git reset --hard HEAD~
 newb drop-constraint # not added to definition file
 	cmt Drop unneeded SQL constraints
+git checkout call-ws
+	cmt 2nd round of fixes
 
 git checkout root
 newb master
