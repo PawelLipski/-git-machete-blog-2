@@ -62,7 +62,7 @@ especially in case of Bitbucket which by default doesn't display source branch n
 To make dealing with all such auxiliary information like PR numbers easier, `git machete status` got a simple tweak recently: custom annotations.
 Just put any phrase after the branch name, separated with a single space (there's an implicit assumption that you never put spaces in git branch names... if you do, think it over twice!),
 and it will be displayed in the output of `status` subcommand.
-To be precise, anything can be placed as annotation, not only PR number specifially... but PR numbers seem the most natural use case.
+To be precise, anything can be placed as annotation, not only PR number specifically... but PR numbers seem the most natural use case.
 
 The annotations were already set up by the `sandbox-setup-2` script.
 Let's run `git machete status`:
@@ -71,7 +71,7 @@ Let's run `git machete status`:
 
 The PR numbers are here completely arbitrary here, since the script obviously didn't create any actual PRs on any external service.
 
-You could also notice that the output slighly changed in terms of remote sync-ness message.
+You could also notice that the output slightly changed in terms of remote sync-ness message.
 In the earlier versions of git machete it was pretty cumbersome that you couldn't really distinguish between a remotely untracked branch and a one that is remotely tracked but not in sync with its remote.
 As of v2.0 of git machete, `status` distinguishes between (roughly) the following cases:
 
@@ -113,7 +113,7 @@ after which it could be simply re-run and would pick up from where it finished.
 After a successful rebase, `allow-ownership-link` was pushed to the remote (or more precisely, the _local remote_ since it resides on the local machine) and similar process happened again for `build-chain`.
 For the sake of brevity it isn't included in the above screenshot, but if you were to continue the traversal,
 then you'd encounter the branch `call-ws` which was aligned with `develop`, so rebase hasn't even been proposed.
-Similiarly, `traverse` would later switch to `master` but wouldn't suggest you to push or pull `master` since it was already in sync with `origin/master`.
+Similarly, `traverse` would later switch to `master` but wouldn't suggest you to push or pull `master` since it was already in sync with `origin/master`.
 
 Generally, the traversal is performed by moving to `next` of each branch (so, pretty much by running `git machete go next`).
 For the more graph-theory-savvy of you... this is equivalent to a pre-order depth-first search of the branch dependency tree.
