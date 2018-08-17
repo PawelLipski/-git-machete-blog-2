@@ -99,7 +99,7 @@ The sequence of steps suggested in the first blog post:
 actually repeats pretty often in a daily work with `git machete`, especially when you receive a lot of remarks from reviewers and push fixes in rounds that follow one another.
 
 To free yourself from thinking about what to check out/rebase/push next, you can turn to `git machete traverse` -
-a wizard that walks (or rather, `traverse`s) the branch dependency tree and suggests what needs to be done to restore sync of branches with their parent branches and remotes.
+a wizard that walks (or rather, traverses) the branch dependency tree and suggests what needs to be done to restore sync of branches with their parent branches and remotes.
 
 Let's check out the `develop` branch (which is listed first in the definition file) and then iterate through the branches.
 
@@ -167,7 +167,7 @@ Note that in the case of both `update` and `add` the user has been explicitly as
 
 ### `infer` - a new subcommand
 
-What's more, the inference is not just limited a single branch - it can even be performed on a repository where there is no yet a `.git/machete` file to infer the entire dependency tree with a single command!
+What's more, the inference is not just limited to a single branch - it can even be performed on a repository where there is no yet a `.git/machete` file to infer the entire dependency tree with a single command!
 
 For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure `git machete` isn't provided with any hint) and run `git machete infer`:
 
