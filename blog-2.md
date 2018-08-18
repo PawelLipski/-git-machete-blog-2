@@ -113,12 +113,14 @@ after which it could be simply re-run and would pick up from where it finished.
 
 After a successful rebase, `allow-ownership-link` was pushed to the remote (or more precisely, the _local remote_ since it resides on the local machine) and similar process happened again for `build-chain`.
 For the sake of brevity it isn't included in the above screenshot, but if you were to continue the traversal,
-then you'd encounter the branch `call-ws`, which was aligned with `develop`, so rebase hasn't even been proposed.
-Similarly, `traverse` would later switch to `master` but wouldn't suggest that you push or pull `master` since it was already in sync with `origin/master`.
+then you'd encounter the branch `call-ws`, which is aligned with `develop`, so rebase wouldn't even be proposed.
+It isn't in sync with its remote counterpart, though, so `traverse` would ask whether to push `call-ws` to `origin`.
+`traverse` would later switch to `master` but wouldn't suggest that you push or pull `master` since it was already in sync with `origin/master`.
+The journey would end with a chance to push `hotfix/add-trigger` (with force, since it diverged from `origin/hotfix/add-trigger`).
 
 Generally, the traversal is performed by moving to the `next` of each branch (so, pretty much by running `git machete go next`).
 For the more graph-theory-savvy of you... this is equivalent to a pre-order depth-first search of the branch dependency tree.
-Each node of the tree (i.e. each git branch) is visited and possibly synced with its parent branch and/or remote counterpart before any of its children are visited.
+Each node of the tree (i.e. each git branch) is visited and possibly synced with its parent branch and/or remote counterpart before any of its children (downstream) branches are visited.
 This way of traversal makes more sense than, say, post-order since you definitely want to put each branch X in sync with its parent branch first before syncing X's children to X itself.
 
 
@@ -174,7 +176,7 @@ For demonstration purposes, let's now remove the `.git/machete` file (so as to m
 
 ![git machete infer](infer.png)
 
-`infer` gives the choice to either accept the inferred tree with `y[es]`, `e[dit]` it first, or reject it with `n[o]`.
+`infer` gives the choice to either accept the inferred tree right away with `y[es]`, `e[dit]` it first, or reject it with `n[o]`.
 In the case of `yes`/`edit`, the old definition file (if it already exists) will be saved under `.git/machete~` (note the added tilde).
 
 Under the hood, `infer` simply performed upstream inference (just as for `show up` etc.) for every single local branch independently,
