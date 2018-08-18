@@ -14,10 +14,10 @@ Just recall the last time you had to review a giant like this (diff stats shown 
 
 ![Too many files in a single PR...](files-changed.png)
 
-You can get the latest git machete release directly from [the git machete repo (github.com/PawelLipski/git-machete)](https://github.com/PawelLipski/git-machete):
+You can get the latest git machete release directly from [the git machete repo (github.com/VirtusLab/git-machete)](https://github.com/VirtusLab/git-machete):
 
 ```
-$ git clone https://github.com/PawelLipski/git-machete.git
+$ git clone https://github.com/VirtusLab/git-machete.git
 $ cd git-machete
 $ sudo make install
 ```
