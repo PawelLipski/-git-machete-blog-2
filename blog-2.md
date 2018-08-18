@@ -24,7 +24,8 @@ $ sudo make install
 
 `make install` copies the `git-machete` Python 2.7 executable to `/usr/local/bin` and sets up the corresponding Bash completion script in `/etc/bash_completion.d`.
 
-Some of the latest improvements (especially automatic dependency inference) have been suggested in the Reddit discussion for the previous part of the series - many thanks for the feedback.
+Some of the latest improvements (especially automatic dependency inference) have been suggested in the [Reddit discussion (link)](https://redd.it/8625a6) for the previous part of the series -
+many thanks for the feedback.
 Also, special thanks to the GitHub user [sprudent](https://github.com/sprudent), who raised the issue of git machete crashing when run from a git submodule.
 Other recent tweaks to git machete were introduced simply to make day-to-day use of the tool even more convenient.
 
