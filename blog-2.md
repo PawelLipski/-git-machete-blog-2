@@ -24,7 +24,7 @@ $ sudo make install
 
 `make install` copies the `git-machete` Python 2.7 executable to `/usr/local/bin` and sets up the corresponding Bash completion script in `/etc/bash_completion.d`.
 
-Some of the latest improvements (especially automatic dependency inference) have been suggested in the [Reddit discussion (link)](https://redd.it/8625a6) for the previous part of the series -
+Some of the latest improvements (especially automatic discovery of branch dependency tree) have been suggested in the [Reddit discussion (link)](https://redd.it/8625a6) for the previous part of the series -
 many thanks for the feedback.
 Also, special thanks to the GitHub user [sprudent](https://github.com/sprudent), who raised the issue of git machete crashing when run from a git submodule.
 Other recent tweaks to git machete were introduced simply to make day-to-day use of the tool even more convenient.
@@ -124,7 +124,7 @@ Each node of the tree (i.e. each git branch) is visited and possibly synced with
 This way of traversal makes more sense than, say, post-order since you definitely want to put each branch X in sync with its parent branch first before syncing X's children to X itself.
 
 
-## Don't remember what depended on what? Branch dependency inference
+## Don't remember what depended on what? Inference of upstream branch
 
 Another new shiny feature that has been recently added to git machete is the ability to automatically infer the upstream (parent) branch for a given branch.
 There's a couple of contexts in which `git machete` can do this kind of guesswork.
@@ -138,7 +138,7 @@ So... as always, `git machete` to the rescue!
 Since v2.0 the tool has had the ability to infer the upstream for a given branch X.
 I won't delve into the details of the algorithm, but in general the heuristic takes into account reflogs of all local branches, specifically the reflog of X itself.
 Intuitively, the older parts of X reflog are considered more relevant for inference of the parent since they're closer to the moment when X was created.
-In a way, this is a similar approach to how the fork point (covered in more detail in the first part of the series) is inferred.
+In a way, this is a similar approach to how the fork point (covered in more detail in the first part of the series) is determined.
 
 Back to `drop-constraint`... the easiest way to trigger upstream inference is to check out the branch in question and run `git machete show up`:
 
@@ -168,22 +168,22 @@ Now let's try and do `git machete add`:
 Since the desired upstream branch wasn't specified (no `--onto` option was provided), the `add` subcommand inferred the `drop-constraint`'s upstream.
 Note that in the case of both `update` and `add` the user has been explicitly asked whether git machete's guess is acceptable.
 
-### `infer` - a new subcommand
+### `discover` - a new subcommand
 
-What's more, the inference is not just limited to a single branch - it can even be performed on a repository where there is no yet a `.git/machete` file to infer the entire dependency tree with a single command!
+What's more, the inference is not just limited to a single branch - it can even be performed on a repository where there is no yet a `.git/machete` file to discover the entire dependency tree with a single command!
 
-For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure `git machete` isn't provided with any hint) and run `git machete infer`:
+For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure `git machete` isn't provided with any hint) and run `git machete discover`:
 
-![git machete infer](infer.png)
+![git machete discover](discover.png)
 
-`infer` gives the choice to either accept the inferred tree right away with `y[es]`, `e[dit]` it first, or reject it with `n[o]`.
+`discover` gives the choice to either accept the discovered tree right away with `y[es]`, `e[dit]` it first, or reject it with `n[o]`.
 In the case of `yes`/`edit`, the old definition file (if it already exists) will be saved under `.git/machete~` (note the added tilde).
 
-Under the hood, `infer` simply performed upstream inference (just as for `show up` etc.) for every single local branch independently,
-while applying some tricks (inspired by the [disjoint-set data structure](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)) to make sure no cycles appear in the inferred graph.
+Under the hood, `discover` simply performed upstream inference (just as for `show up` etc.) for every single local branch independently,
+while applying some tricks (inspired by the [disjoint-set data structure](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)) to make sure no cycles appear in the created graph.
 
 The only thing that obviously could not be inferred were custom annotations.
-Also, if the tree structure has been changed in the meantime (so that e.g. `develop` is a child of `call-ws` instead of the inverse), `infer` can't be expected to exactly guess the changed structure.
+Also, if the tree structure has been changed in the meantime (so that e.g. `develop` became a child of `call-ws` instead of the inverse), `discover` can't be expected to exactly guess the changed structure.
 The inference is based on git reflogs and doesn't know anything about the current or previous state of the `.git/machete` file.
 
 At this point one can ask a question: why then is the definition file even needed since the upstreams could be always inferred on the fly?
