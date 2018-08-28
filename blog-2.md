@@ -191,3 +191,20 @@ The argument against such an approach is that it wouldn't be desirable if everyt
 The developer should keep a sensible amount of control while still being provided with some hints when they're in doubt.
 It seems much more reasonable than the inverse - inferring everything that's possible and only asking the human when the tool is in doubt.
 
+
+## `discover` + `traverse` combo
+
+So to recap... let's combine all that goodies into a single one-size-fits-all recipe:
+
+```bash
+$ cd your-repo/
+$ git machete discover
+  # (see and possibly edit the suggested layout of branches)
+$ git machete go root
+$ git machete traverse
+  # (put each branch one by one in sync with its parent and remote counterpart)
+```
+
+Assuming you're sticking to rebase flow (in particular, you never merge upstream branch like `master` into your topic branches but instead rebase topic branches onto `master`),
+those few git-machete cuts should magically sort out your repository... whatever kind of jungle you might have had before.
+
