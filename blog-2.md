@@ -170,7 +170,7 @@ Note that in the case of both `update` and `add` the user has been explicitly as
 
 ### `discover` - a new subcommand
 
-What's more, the inference is not just limited to a single branch - it can even be performed on a repository where there is no yet a `.git/machete` file to discover the entire dependency tree with a single command!
+What's more, the inference is not just limited to a single branch - it can even be performed on a repository where there is not yet a `.git/machete` file to discover the entire dependency tree with a single command!
 
 For demonstration purposes, let's now remove the `.git/machete` file (so as to make sure `git machete` isn't provided with any hint) and run `git machete discover`:
 
