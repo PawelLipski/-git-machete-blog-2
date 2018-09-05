@@ -1,5 +1,5 @@
 
-# `git machete` strikes again! Traverse the git (rebase) jungle even faster with v2.0
+# `git machete` strikes again! Traverse the git (rebase) jungle even faster with v2.0+
 
 
 ## Intro
