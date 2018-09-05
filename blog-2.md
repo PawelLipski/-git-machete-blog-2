@@ -168,7 +168,7 @@ Now let's try and do `git machete add`:
 Since the desired upstream branch wasn't specified (no `--onto` option was provided), the `add` subcommand inferred the `drop-constraint`'s upstream.
 Note that in the case of both `update` and `add` the user has been explicitly asked whether git machete's guess is acceptable.
 
-### `discover` - a new subcommand
+### `discover`
 
 What's more, the inference is not just limited to a single branch - it can even be performed on a repository where there is not yet a `.git/machete` file to discover the entire dependency tree with a single command!
 
