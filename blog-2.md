@@ -136,8 +136,7 @@ Let's assume for a moment that you're in the awkward situation of not rememberin
 
 So... as always, `git machete` to the rescue!
 Since v2.0 the tool has had the ability to infer the upstream for a given branch X.
-I won't delve into the details of the algorithm, but in general the heuristic takes into account reflogs of all local branches, specifically the reflog of X itself.
-Intuitively, the older parts of X reflog are considered more relevant for inference of the parent since they're closer to the moment when X was created.
+I won't delve into the details of the algorithm, but in general the heuristic takes into account reflogs of all local branches and their remote counterparts, specifically the reflog of X itself.
 In a way, this is a similar approach to how the fork point (covered in more detail in the first part of the series) is determined.
 
 Back to `drop-constraint`... the easiest way to trigger upstream inference is to check out the branch in question and run `git machete show up`:
