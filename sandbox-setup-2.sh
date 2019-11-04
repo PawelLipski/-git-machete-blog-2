@@ -22,6 +22,11 @@ newrepo() {
 	git init $opt
 }
 
+push() {
+	b=$(git symbolic-ref --short HEAD)
+	git push -u origin $b
+}
+
 newrepo machete-sandbox-remote --bare
 newrepo machete-sandbox
 git remote add origin ~/machete-sandbox-remote
@@ -31,7 +36,7 @@ newb root
 newb develop
 	cmt Develop commit
 newb allow-ownership-link
-	git push -u
+	push
 	cmt Allow ownership links
 newb build-chain
 	cmt Build arbitrarily long chains
@@ -39,11 +44,11 @@ git checkout allow-ownership-link
 	cmt 1st round of fixes
 git checkout develop
 	cmt Other develop commit
-	git push -u
+	push
 newb call-ws
 	cmt Call web service
 	cmt 1st round of fixes
-	git push -u
+	push
 newb drop-constraint # not added to definition file
 	cmt Drop unneeded SQL constraints
 git checkout call-ws
@@ -52,10 +57,10 @@ git checkout call-ws
 git checkout root
 newb master
 	cmt Master commit
-	git push -u
+	push
 newb hotfix/add-trigger
 	cmt HOTFIX Add the trigger
-	git push -u
+	push
 	git commit --amend -m 'HOTFIX Add the trigger (amended)'
 
 cat >.git/machete <<EOF
