@@ -36,8 +36,8 @@ newb root
 newb develop
 	cmt Develop commit
 newb allow-ownership-link
-	push
 	cmt Allow ownership links
+	push
 newb build-chain
 	cmt Build arbitrarily long chains
 git checkout allow-ownership-link
